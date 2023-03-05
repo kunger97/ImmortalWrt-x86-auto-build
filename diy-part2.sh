@@ -16,7 +16,7 @@
 #Remove Old Version of passwall
 rm -rf package/feeds/luci/luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall.git package/passwall
-git clone -b luci https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
+git clone -b luci-reality https://github.com/xiaorouji/openwrt-passwall.git package/luci-app-passwall
 mv package/luci-app-passwall/luci-app-passwall/* package/luci-app-passwall/ && rm -rf package/luci-app-passwall/luci-app-passwall
 #Add new Homeproxy luci application
 #git clone https://github.com/immortalwrt/homeproxy.git package/homeproxy
