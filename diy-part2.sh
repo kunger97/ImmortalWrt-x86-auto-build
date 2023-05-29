@@ -11,5 +11,6 @@
 #
 
 #Add new luci-app-openclash
-git clone --depth 1 https://github.com/vernesong/OpenClash.git /tmp/OpenClash
+rm -rf feeds/luci/applications/luci-app-openclash
+git clone -b dev --depth 1 https://github.com/vernesong/OpenClash.git /tmp/OpenClash
 mv /tmp/OpenClash/luci-app-openclash package/
