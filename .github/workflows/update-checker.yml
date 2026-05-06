@@ -1,58 +1,44 @@
 #
-# Copyright (c) 2019-2021 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# File: .github/workflows/update-checker.yml
-# Description: Source code update checker
+# Description: Source code update checker (Updated for modern GitHub Actions)
 #
 
 name: Update Checker
-
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: openwrt-25.12
-
 on:
   workflow_dispatch:
   schedule:
     - cron: 0 */18 * * *
-
 jobs:
   check:
     runs-on: ubuntu-latest
-
     steps:
-
     - name: Get Commit Hash
       id: getHash
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
-        echo "::set-output name=commitHash::$(git rev-parse HEAD)"
-
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
     - name: Compare Commit Hash
       id: cacheHash
       uses: actions/cache@v4
       with:
         path: .commitHash
         key: HEAD-${{ steps.getHash.outputs.commitHash }}
-
     - name: Save New Commit Hash
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
         echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
-
     - name: Trigger build
       if: steps.cacheHash.outputs.cache-hit != 'true'
-      uses: peter-evans/repository-dispatch@v1
+      uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
         event-type: Source Code Update
-
     - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@v2
       with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
         retain_days: 1
         keep_minimum_runs: 1
